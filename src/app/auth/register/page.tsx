@@ -12,23 +12,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { useAuthForm } from '@/hooks/useAuthForm'
 import { registerSchema, RegisterValues } from '@/schemas/auth'
+import { authStore } from '@/stores/auth.store'
+import { motion } from "framer-motion"
 import Link from "next/link"
 
 export default function RegisterPage() {
-  const form = useAuthForm(registerSchema)
+  const form = useAuthForm(registerSchema, { firstName: "", lastName: "", email: "", password: "", phoneNumber: "" })
 
   const onSubmit = (data: RegisterValues) => {
-    console.log("Login:", data)
+    authStore.register(data)
+    console.log("Register:", data)
   }
 
   return (
-    <div className="z-10 w-full max-w-2xl rounded-3xl border border-white/10 bg-white/10 p-10 backdrop-blur-lg shadow-xl">
-      <h2 className="mb-8 text-center text-5xl font-extrabold text-white">Register</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="z-10 w-full max-w-2xl rounded-3xl border border-white/10 bg-white/10 p-10 backdrop-blur-lg shadow-xl"
+    >
+      <motion.h2
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="mb-8 text-center text-5xl font-extrabold text-white"
+      >
+        Register
+      </motion.h2>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="name"
+            name="firstName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-white text-xl">First Name</FormLabel>
@@ -45,7 +61,7 @@ export default function RegisterPage() {
           />
           <FormField
             control={form.control}
-            name="lastname"
+            name="lastName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-white text-xl">Last Name</FormLabel>
@@ -98,7 +114,7 @@ export default function RegisterPage() {
           />
           <FormField
             control={form.control}
-            name="phone"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-white text-xl">Phone</FormLabel>
@@ -116,18 +132,24 @@ export default function RegisterPage() {
           />
           <Button
             type="submit"
-            className="w-full h-14 text-xl text-dark rounded-xl hover:bg-white/90"
+            className="w-full h-14 text-xl text-dark rounded-xl"
           >
             Sign Up
           </Button>
         </form>
       </Form>
-      <p className="mt-8 text-end text-gray-400 text-lg">
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: 0.4 }}
+        className="mt-8 text-end text-gray-400 text-lg"
+      >
         Already have an account?{" "}
         <Link href="/auth/login" className="underline hover:text-gray-300">
           Login
         </Link>
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   )
 }

@@ -1,5 +1,6 @@
+import { axiosInstance } from '@/api/axios-instance';
 import { IAuthResponse, ILogin, IRegister, IUser } from '@/types/auth/types';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 export class AuthService {
   private static readonly LOGIN_URL = "/auth/login";
@@ -9,26 +10,26 @@ export class AuthService {
   private static readonly ME_URL = "/users/me"
 
   static async login(data: ILogin): Promise<IAuthResponse> {
-    const response: AxiosResponse<IAuthResponse> = await axios.post(this.LOGIN_URL, data)
+    const response: AxiosResponse<IAuthResponse> = await axiosInstance.post(this.LOGIN_URL, data)
     return response.data
   }
 
   static async register(data: IRegister): Promise<IAuthResponse> {
-    const response: AxiosResponse<IAuthResponse> = await axios.post(this.REGISTER_URL, data)
+    const response: AxiosResponse<IAuthResponse> = await axiosInstance.post(this.REGISTER_URL, data)
     return response.data
   }
 
   static async logout(): Promise<void> {
-    await axios.post(this.LOGOUT_URL)
+    await axiosInstance.post(this.LOGOUT_URL)
   }
 
   static async refresh(): Promise<IAuthResponse> {
-    const response: AxiosResponse<IAuthResponse> = await axios.get(this.REFRESH_URL)
+    const response: AxiosResponse<IAuthResponse> = await axiosInstance.get(this.REFRESH_URL)
     return response.data
   }
   
   static async getMe(): Promise<IUser> {
-    const res = await axios.get(this.ME_URL)
+    const res = await axiosInstance.get(this.ME_URL)
     return res.data
   }
 }

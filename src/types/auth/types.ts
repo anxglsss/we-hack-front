@@ -12,7 +12,7 @@ export interface ILogin {
 }
 
 export interface IRegister {
-  name: string
+  firstName: string
   lastName: string
   email: string
   password: string
