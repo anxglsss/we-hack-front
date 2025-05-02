@@ -1,8 +1,11 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'https://1004-178-91-71-18.ngrok-free.app/api',
+  baseURL: 'https://1412-178-91-71-18.ngrok-free.app/api',
   withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 axiosInstance.interceptors.request.use((config) => {

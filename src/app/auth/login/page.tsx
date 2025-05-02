@@ -14,15 +14,18 @@ import { useAuthForm } from '@/hooks/useAuthForm'
 import { loginSchema, LoginValues } from '@/schemas/auth'
 import { authStore } from "@/stores/auth.store"
 import { motion } from "framer-motion"
-import { Loader2 } from "lucide-react"
+import { Loader2, LogIn } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const form = useAuthForm(loginSchema, { email: "", password: "" })
+  const router = useRouter()
 
   const onSubmit = (data: LoginValues) => {
     authStore.login(data)
     console.log("Login:", data)
+    router.replace("/dashboard")
   }
 
   return (
@@ -85,9 +88,15 @@ export default function LoginPage() {
             className="w-full h-15 text-xl font-medium text-dark rounded-xl"
           >
             {authStore.isLoading ? (
-              <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+              <div className="flex justify-center items-center space-x-2">
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <span>Please wait...</span>
+              </div>
             ) : (
-              "Sign In"
+              <div className="flex justify-center items-center space-x-2">
+                <LogIn className="w-10 h-10" />
+                <span>Sign In</span>
+              </div>
             )}
           </Button>
         </form>

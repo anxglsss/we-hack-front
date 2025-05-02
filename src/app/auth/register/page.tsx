@@ -1,5 +1,6 @@
 "use client"
 
+import { OtpModal } from "@/components/modals/OtpModal"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,17 +16,29 @@ import { registerSchema, RegisterValues } from '@/schemas/auth'
 import { authStore } from '@/stores/auth.store'
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function RegisterPage() {
+  const [isOtpOpen, setIsOtpOpen] = useState(false)
   const form = useAuthForm(registerSchema, { firstName: "", lastName: "", email: "", password: "", phoneNumber: "" })
+  const router = useRouter()
 
-  const onSubmit = (data: RegisterValues) => {
-    authStore.register(data)
+  const onSubmit = async (data: RegisterValues) => {
+    setIsOtpOpen(true)
+    await authStore.register(data)
+  
+    setTimeout(() => {
+      authStore.sendVerificationCode(data.email)
+    }, 1000) 
     console.log("Register:", data)
+    router.replace("/dashboard")
   }
+  
 
   return (
-    <motion.div
+    <>
+      <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -151,5 +164,7 @@ export default function RegisterPage() {
         </Link>
       </motion.p>
     </motion.div>
+    <OtpModal open={isOtpOpen} onOpenChange={setIsOtpOpen}/>
+    </>
   )
 }

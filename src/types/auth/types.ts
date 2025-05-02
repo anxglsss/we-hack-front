@@ -1,9 +1,6 @@
 export interface IUser {
-  id: string
-  firstName: string
-  lastName: string
   email: string
-  phoneNumber: string
+  role: string
 }
 
 export interface ILogin {
@@ -23,4 +20,16 @@ export interface IAuthResponse {
   accessToken: string
   refreshToken: string
   expiresIn: string
+}
+
+export interface IDecodedJWT {
+  sub: string
+  roles: string[]
+  iat: number
+  exp: number
+}
+
+export interface IVerifyCode {
+  email: string
+  code: number
 }
