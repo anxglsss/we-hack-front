@@ -18,8 +18,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.log("Неавторизован")
-      // Можешь сделать редирект или logout
     }
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
 )
