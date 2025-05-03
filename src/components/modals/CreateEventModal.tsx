@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -17,7 +16,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -25,13 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { cn } from '@/lib/tw-merge'
 import { useClubStore } from '@/stores/club.store'
 import { useEventStore } from '@/stores/event.store'
 import { useVenueStore } from '@/stores/venue.store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -172,39 +168,20 @@ export const CreateEventModal = ({ open, onOpenChange }: CreateEventModalProps) 
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField
+            <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="text-sm text-white">Дата</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              'w-full justify-start text-left bg-white/10 hover:bg-white/20 text-white text-sm h-10 px-3 rounded-md',
-                              !field.value && 'text-white/50'
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value instanceof Date && !isNaN(field.value.getTime())
-                              ? format(field.value, 'PPP')
-                              : 'Выберите дату'}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 bg-zinc-900 text-white border border-zinc-700 rounded-md">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          initialFocus
-                          className="bg-zinc-900 text-white"
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                        onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
+                        className="bg-white/10 text-white placeholder:text-white/50 h-10 px-3 rounded-md text-sm"
+                      />
+                    </FormControl>
                     <FormMessage className="text-red-400 text-sm" />
                   </FormItem>
                 )}
