@@ -1,4 +1,4 @@
-import { IAuthResponse } from '@/types/auth/types'
+import { IAuthResponse } from '@/types/auth.types'
 import { create } from 'zustand'
 
 interface TokenState {

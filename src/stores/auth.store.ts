@@ -1,6 +1,6 @@
 import { AuthService } from "@/api/services/auth.service"
 import { decodeUser } from "@/lib/decode-token"
-import { ILogin, IRegister, IUser } from "@/types/auth/types"
+import { ILogin, IRegister, IUser } from "@/types/auth.types"
 import { toast } from "sonner"
 import { create } from "zustand"
 import { useTokenStore } from "./token.store"
@@ -83,8 +83,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   async logout() {
     try {
       await AuthService.logout()
-    } catch (error: any) {
-      toast.error(error?.response?.data?.errorMessage || "Ошибка при выходе")
     } finally {
       useTokenStore.getState().clearTokens()
       set({ user: null })

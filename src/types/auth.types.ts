@@ -33,3 +33,7 @@ export interface IVerifyCode {
   email: string
   code: number
 }
+
+export interface ISendVerificationCodeRequest {
+  email: string
+}

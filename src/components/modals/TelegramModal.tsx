@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export function TelegramModal() {
@@ -33,11 +34,14 @@ export function TelegramModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Telegram Bot</Button>
+        <Button className='text-white py-5 text-md px-7 h-10'>
+          <Send/>
+        Telegram Bot
+        </Button>
       </DialogTrigger>
       <DialogContent className="bg-zinc-800 text-white rounded-xl border-none shadow-lg max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">Наш Telegram Бот</DialogTitle>
+          <DialogTitle className="text-lg text-white font-semibold">Наш Telegram Бот</DialogTitle>
           <DialogDescription className="text-sm text-zinc-400">
             Перейдите по ссылке ниже, чтобы начать использовать нашего бота.
           </DialogDescription>

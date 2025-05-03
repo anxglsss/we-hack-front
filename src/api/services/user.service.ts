@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/axios-instance'
-import { IUser } from '@/types/auth/types'
+import { IUser } from '@/types/auth.types'
 import { AxiosResponse } from 'axios'
 
 export class UserService {

@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/axios-instance';
-import { IAuthResponse, ILogin, IRegister, IUser, IVerifyCode } from '@/types/auth/types';
+import { IAuthResponse, ILogin, IRegister, IUser, IVerifyCode } from '@/types/auth.types';
 import { AxiosResponse } from 'axios';
 
 export class AuthService {

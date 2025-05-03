@@ -15,15 +15,12 @@ import { useAuthForm } from '@/hooks/useAuthForm'
 import { registerSchema, RegisterValues } from '@/schemas/auth'
 import { useAuthStore } from '@/stores/auth.store'
 import { motion } from "framer-motion"
-import { observer } from 'mobx-react-lite'
 import Link from "next/link"
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-export default observer(function RegisterPage() {
+export default function RegisterPage() {
   const [isOtpOpen, setIsOtpOpen] = useState(false)
   const form = useAuthForm(registerSchema, { firstName: "", lastName: "", email: "", password: "", phoneNumber: "" })
-  const router = useRouter()
   const authStore = useAuthStore()
 
   const onSubmit = async (data: RegisterValues) => {
@@ -32,7 +29,7 @@ export default observer(function RegisterPage() {
   
     setTimeout(() => {
       authStore.sendVerificationCode(data.email)
-    }, 1000) 
+    }, 2000) 
     console.log("Register:", data)
   }
 
@@ -174,4 +171,4 @@ export default observer(function RegisterPage() {
     <OtpModal open={isOtpOpen} onOpenChange={setIsOtpOpen}/>
     </>
   )
-})
+}

@@ -13,9 +13,9 @@ export default function DashboardPage() {
   
   // Редирект на страницу по роли
   switch(user.role) {
-    case 'ROLE_USER':
+    case 'ROLE_STUDENT':
       redirect('/dashboard/student')
-    case 'ROLE_ORGANIZER':
+    case 'ROLE_CLUB_MANAGER':
       redirect('/dashboard/organizer')
     case 'ROLE_ADMIN':
       redirect('/dashboard/admin')

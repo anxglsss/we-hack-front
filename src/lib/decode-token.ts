@@ -1,4 +1,4 @@
-import { IDecodedJWT, IUser } from '@/types/auth/types'
+import { IDecodedJWT, IUser } from '@/types/auth.types'
 import { jwtDecode } from 'jwt-decode'
 
 export function decodeUser(token: string): IUser {

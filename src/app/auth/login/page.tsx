@@ -24,9 +24,13 @@ export default function LoginPage() {
   const authStore = useAuthStore()
 
   const onSubmit = (data: LoginValues) => {
-    authStore.login(data)
+    try{
+      authStore.login(data)
     console.log("Login:", data)
     router.replace("/dashboard")
+    } catch(e: any) {
+      console.log(e)
+    }
   }
 
   return (

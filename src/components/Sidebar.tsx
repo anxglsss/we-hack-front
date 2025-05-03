@@ -3,44 +3,42 @@
 import { useAuthStore } from '@/stores/auth.store'
 import clsx from 'clsx'
 import {
-  Bookmark,
+  ArrowBigLeftDash,
+  ArrowBigRightDash,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
-  GraduationCap,
-  LayoutDashboard,
   Settings,
   Users
 } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { ExpandedLogo } from './ExpandedLogo'
 
 const roleBasedNavItems = {
-  student: [
-    { href: '/dashboard/student/bookings', icon: <Bookmark />, label: 'Мои бронирования' },
-    { href: '/dashboard/student/courses', icon: <GraduationCap />, label: 'Мои курсы' },
-  ],
+  student: [],
   organizer: [
-    { href: '/dashboard/organizer/incoming', icon: <Calendar />, label: 'Входящие брони' },
-    { href: '/dashboard/organizer/active', icon: <Calendar />, label: 'Активные брони' },
+    { icon: <Calendar />, label: 'Входящие брони', href: '/dashboard/incoming' },
+    { icon: <Calendar />, label: 'Активные брони', href: '/dashboard/active' },
   ],
   admin: [
-    { href: '/dashboard/admin/customers', icon: <Users />, label: 'Клиенты' },
-    { href: '/dashboard/admin/settings', icon: <Settings />, label: 'Настройки' },
+    { icon: <Users />, label: 'Клиенты', href: '/dashboard/clients' },
+    { icon: <Settings />, label: 'Настройки', href: '/dashboard/settings' },
   ],
   common: [
-    { href: '/dashboard', icon: <LayoutDashboard />, label: 'Главная' },
+    { icon: <Calendar />, label: 'События', href: '/dashboard/events' },
+    { icon: <Users />, label: 'Клубы', href: '/dashboard/clubs' },
+    { icon: <Users />, label: 'Все места', href: '/dashboard/places' },  // Added "All Places"
   ]
 }
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const {user} = useAuthStore()
+  const { user } = useAuthStore()
   const role = user?.role || 'student'
+  const router = useRouter()
+
   const items = [...roleBasedNavItems.common, ...(roleBasedNavItems[role as keyof typeof roleBasedNavItems] || [])]
 
   const [collapsed, setCollapsed] = useState(false)
+  const [selectedLabel, setSelectedLabel] = useState<string>('События')
 
   return (
     <div className="pt-2 pl-3 pb-2">
@@ -50,37 +48,45 @@ export function Sidebar() {
           collapsed ? 'w-20' : 'w-64'
         )}
       >
-        {/* Header */}
-        <div className={clsx('flex items-center justify-between transition-all duration-300 px-4 py-6', collapsed && 'justify-center px-2')}>
-          {!collapsed && <div className="text-2xl font-bold tracking-tight">OUR LOGO</div>}
-          <button onClick={() => setCollapsed(!collapsed)} className="text-zinc-300">
-            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+        <div className="relative flex justify-center items-center px-4 pt-6 pb-6">
+          {collapsed ? <></> : <ExpandedLogo />}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="absolute right-4 top-4 text-zinc-300"
+          >
+            {collapsed ? <ArrowBigRightDash size={28} className='mb-80' /> : <ArrowBigLeftDash size={28} />}
           </button>
         </div>
-
-        {/* Nav */}
         <nav
           className={clsx(
             'flex flex-col transition-all duration-300 text-sm',
             collapsed ? 'gap-1 px-2' : 'gap-3 px-4'
           )}
         >
-          {!collapsed && <div className="text-md text-zinc-400 mb-1"><p>Меню</p></div>}
-          {items.map(({ href, icon, label }) => {
-            const active = pathname === href
-
+          {!collapsed && <div className="text-lg text-zinc-400 mb-1"><p>Меню</p></div>}
+          {items.map(({ icon, label, href }) => {
+            const active = selectedLabel === label
             return (
-              <Link
-                key={href}
-                href={href}
+              <button
+                key={label}
+                onClick={() => {
+                  setSelectedLabel(label)
+                  router.push(href)
+                }}
                 className={clsx(
-                  'flex items-center transition-all duration-300 rounded-lg',
-                  collapsed ? 'justify-center py-3' : 'gap-4 px-4 py-3',
+                  'flex items-center transition-all duration-300 rounded-lg relative group w-full',
+                  collapsed ? 'justify-center py-3 mt-4' : 'gap-4 px-4 py-3',
                   active
-                    ? 'bg-zinc-800 border-l-4 border-red-500 text-white'
+                    ? 'bg-zinc-800 text-white'
                     : 'hover:bg-zinc-800 text-zinc-300'
                 )}
               >
+                <span
+                  className={clsx(
+                    'absolute left-0 top-0 h-full w-1 bg-primary rounded-r transition-opacity duration-300',
+                    active ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
+                  )}
+                />
                 <div className={clsx(
                   'transition-all duration-300 flex-shrink-0',
                   collapsed ? 'text-[20px]' : 'text-[24px]'
@@ -92,12 +98,11 @@ export function Sidebar() {
                     {label}
                   </span>
                 )}
-              </Link>
+              </button>
             )
           })}
         </nav>
 
-        {/* Footer (user info) */}
         {!collapsed && user && (
           <div className="mt-auto px-4 pt-4 border-t border-zinc-700 text-sm">
             <div>{user.email}</div>

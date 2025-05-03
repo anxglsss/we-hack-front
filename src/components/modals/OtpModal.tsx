@@ -31,7 +31,9 @@ export const OtpModal = observer(({ open, onOpenChange }: OtpModalProps) => {
         verifyCode(numericCode)
         setCode("")
         onOpenChange(false)
-        router.replace("/dashboard")
+        setTimeout(() => {
+          router.replace("/dashboard")
+        }, 2000)
       } 
     } catch (error) {
       console.error("Error verifying code:", error)
