@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useAuthForm } from '@/hooks/useAuthForm'
 import { loginSchema, LoginValues } from '@/schemas/auth'
-import { authStore } from "@/stores/auth.store"
+import { useAuthStore } from "@/stores/auth.store"
 import { motion } from "framer-motion"
 import { Loader2, LogIn } from "lucide-react"
 import Link from "next/link"
@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation'
 export default function LoginPage() {
   const form = useAuthForm(loginSchema, { email: "", password: "" })
   const router = useRouter()
+  const authStore = useAuthStore()
 
   const onSubmit = (data: LoginValues) => {
     authStore.login(data)

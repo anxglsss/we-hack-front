@@ -1,134 +1,119 @@
 import { AuthService } from "@/api/services/auth.service"
 import { decodeUser } from "@/lib/decode-token"
 import { ILogin, IRegister, IUser } from "@/types/auth/types"
-import { makeAutoObservable, runInAction } from "mobx"
 import { toast } from "sonner"
-import { tokenStore } from "./token.store"
+import { create } from "zustand"
+import { useTokenStore } from "./token.store"
 
-class AuthStore {
-  user: IUser | null = null
-  isLoading = false
-  registeredEmail: string | null = null // для хранения email после регистрации
+interface AuthState {
+  user: IUser | null
+  isLoading: boolean
+  registeredEmail: string | null
+  isAuth: boolean
+  register: (data: IRegister) => Promise<void>
+  verifyCode: (code: number) => Promise<void>
+  login: (data: ILogin) => Promise<void>
+  logout: () => Promise<void>
+  getMe: () => Promise<void>
+  sendVerificationCode: (email: string) => Promise<void>
+}
 
-  constructor() {
-    makeAutoObservable(this)
-  }
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isLoading: false,
+  registeredEmail: null,
 
-  private setLoading(state: boolean) {
-    this.isLoading = state
-  }
+  get isAuth() {
+    return Boolean(get().user)
+  },
 
-  private handleError(error: any, fallback: string) {
-    toast.error(error?.response?.data?.errorMessage || fallback)
-  }
-
-  async register(data: IRegister) {
-    this.setLoading(true)
+  async register(data) {
+    set({ isLoading: true })
     try {
       const { email } = await AuthService.register(data)
-      runInAction(() => {
-        this.registeredEmail = email
-      })
+      set({ registeredEmail: email })
+    } catch (e) {
+      console.log(e)
     } finally {
-      this.setLoading(false)
+      set({ isLoading: false })
     }
-  }
+  },
 
-  async verifyCode(code: number) {
-    if (!this.registeredEmail) {
+  async verifyCode(code) {
+    const { registeredEmail } = get()
+    const { setTokens } = useTokenStore.getState()
+
+    if (!registeredEmail) {
       toast.error("Неизвестный email. Зарегистрируйтесь заново.")
       return
     }
 
-    this.setLoading(true)
+    set({ isLoading: true })
     try {
-      const tokens = await AuthService.verifyCode({
-        email: this.registeredEmail,
-        code,
-      })
-
-      tokenStore.setTokens(tokens)
+      const tokens = await AuthService.verifyCode({ email: registeredEmail, code })
+      setTokens(tokens)
 
       const user = decodeUser(tokens.accessToken)
-
-      runInAction(() => {
-        this.user = user
-        toast.success(`Добро пожаловать, ${user.email}`)
-      })
-    } catch (error) {
-      this.handleError(error, "Неверный код подтверждения")
+      set({ user })
+      console.log(user)
+      toast.success(`Добро пожаловать, ${user.email}`)
+    } catch (error: any) {
+      toast.error(error?.response?.data?.errorMessage || "Неверный код подтверждения")
     } finally {
-      this.setLoading(false)
+      set({ isLoading: false })
     }
-  }
+  },
 
-  async login(data: ILogin) {
-    this.setLoading(true)
+  async login(data) {
+    set({ isLoading: true })
     try {
       const tokens = await AuthService.login(data)
-      tokenStore.setTokens(tokens)
+      useTokenStore.getState().setTokens(tokens)
 
       const user = decodeUser(tokens.accessToken)
-      console.log(user)
-
-      runInAction(() => {
-        this.user = user
-        toast.success(`Добро пожаловать, ${user.email}`)
-      })
-    } catch (error) {
-      this.handleError(error, "Ошибка при входе")
+      set({ user })
+      toast.success(`Добро пожаловать, ${user.email}`)
+    } catch (error: any) {
+      toast.error(error?.response?.data?.errorMessage || "Ошибка при входе")
     } finally {
-      this.setLoading(false)
+      set({ isLoading: false })
     }
-  }
+  },
 
   async logout() {
     try {
       await AuthService.logout()
-    } catch (error) {
-      this.handleError(error, "Ошибка при выходе")
+    } catch (error: any) {
+      toast.error(error?.response?.data?.errorMessage || "Ошибка при выходе")
     } finally {
-      runInAction(() => {
-        this.user = null
-        tokenStore.clearTokens()
-        toast.success("Вы вышли из аккаунта")
-      })
+      useTokenStore.getState().clearTokens()
+      set({ user: null })
+      toast.success("Вы вышли из аккаунта")
     }
-  }
+  },
 
   async getMe() {
     try {
       const user = await AuthService.getMe()
-      runInAction(() => {
-        this.user = user
-        toast.success(`Профиль загружен`)
-      })
-    } catch (error) {
-      runInAction(() => {
-        this.user = null
-        tokenStore.clearTokens()
-      })
-      this.handleError(error, "Ошибка загрузки профиля")
+      set({ user })
+      toast.success("Профиль загружен")
+    } catch (error: any) {
+      useTokenStore.getState().clearTokens()
+      set({ user: null })
+      toast.error(error?.response?.data?.errorMessage || "Ошибка загрузки профиля")
     }
-  }
+  },
 
-  async sendVerificationCode(email: string) {
-    this.setLoading(true)
+  async sendVerificationCode(email) {
+    set({ isLoading: true })
     try {
-      const message = await AuthService.sendVerificationCode({ email })  // Pass email as an object
-      toast.success(message) // "Verification code sent."
-    } catch (error) {
+      const message = await AuthService.sendVerificationCode({ email })
+      toast.success(message)
+    } catch (error: any) {
       console.log(error)
-      this.handleError(error, "Ошибка при отправке кода подтверждения")
+      toast.error(error?.response?.data?.errorMessage || "Ошибка при отправке кода подтверждения")
     } finally {
-      this.setLoading(false)
+      set({ isLoading: false })
     }
-  }
-  
-
-  get isAuth() {
-    return Boolean(this.user)
-  }
-}
-
-export const authStore = new AuthStore()
+  },
+}))

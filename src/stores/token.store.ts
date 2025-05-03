@@ -1,27 +1,26 @@
-import { IAuthResponse } from "@/types/auth/types"
-import { makeAutoObservable } from "mobx"
+import { IAuthResponse } from '@/types/auth/types'
+import { create } from 'zustand'
 
-class TokenStore {
-  accessToken: string | null = null
-  refreshToken: string | null = null
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  setTokens({ accessToken, refreshToken }: IAuthResponse) {
-    this.accessToken = accessToken
-    this.refreshToken = refreshToken
-    localStorage.setItem("accessToken", accessToken)
-    localStorage.setItem("refreshToken", refreshToken)
-  }
-
-  clearTokens() {
-    this.accessToken = null
-    this.refreshToken = null
-    localStorage.removeItem("accessToken")
-    localStorage.removeItem("refreshToken")
-  }
+interface TokenState {
+  accessToken: string | null
+  refreshToken: string | null
+  setTokens: (tokens: IAuthResponse) => void
+  clearTokens: () => void
 }
 
-export const tokenStore = new TokenStore()
+export const useTokenStore = create<TokenState>((set) => ({
+  accessToken: typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null,
+  refreshToken: typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null,
+
+  setTokens: ({ accessToken, refreshToken }) => {
+    localStorage.setItem('accessToken', accessToken)
+    localStorage.setItem('refreshToken', refreshToken)
+    set({ accessToken, refreshToken })
+  },
+
+  clearTokens: () => {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    set({ accessToken: null, refreshToken: null })
+  },
+}))

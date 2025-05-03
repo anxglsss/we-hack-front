@@ -8,9 +8,10 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { authStore } from "@/stores/auth.store"
+import { useAuthStore } from "@/stores/auth.store"
 import { motion } from "framer-motion"
 import { observer } from "mobx-react-lite"
+import { useRouter } from 'next/navigation'
 import { useState } from "react"
 
 interface OtpModalProps {
@@ -20,13 +21,20 @@ interface OtpModalProps {
 
 export const OtpModal = observer(({ open, onOpenChange }: OtpModalProps) => {
   const [code, setCode] = useState("")
+  const { verifyCode } = useAuthStore()
+  const router = useRouter()
 
   const handleVerify = () => {
-    const numericCode = parseInt(code)
-    if (!isNaN(numericCode) && code.length === 6) {
-      authStore.verifyCode(numericCode)
-      setCode("")
-      onOpenChange(false)
+    try{
+      const numericCode = parseInt(code)
+      if (!isNaN(numericCode) && code.length === 6) {
+        verifyCode(numericCode)
+        setCode("")
+        onOpenChange(false)
+        router.replace("/dashboard")
+      } 
+    } catch (error) {
+      console.error("Error verifying code:", error)
     }
   }
 

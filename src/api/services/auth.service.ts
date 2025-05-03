@@ -16,6 +16,7 @@ export class AuthService {
   }
 
   static async register(data: IRegister): Promise<{ email: string }> {
+    console.log(data.email)
     const response: AxiosResponse<{ email: string }> = await axiosInstance.post(this.REGISTER_URL, data)
     return response.data
   }
