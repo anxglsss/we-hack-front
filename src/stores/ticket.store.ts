@@ -4,6 +4,10 @@ import { TicketResponseDto } from "@/types/ticket.types";
 import { toast } from "sonner";
 import { create } from "zustand";
 
+
+// In your ticket.store.ts
+
+
 interface TicketState {
   tickets: TicketResponseDto[];
   currentTicket: TicketResponseDto | null;
