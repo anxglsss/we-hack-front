@@ -1,10 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { LogoutModal } from './modals/LogoutModal'
-import { OrganizerRequestModal } from './modals/OrganizerRequestModal'
-import { TelegramModal } from './modals/TelegramModal'
+import { motion } from 'framer-motion';
+import { Instagram } from 'lucide-react'; // or any icon library you use
+import { useState } from 'react';
+import { LogoutModal } from './modals/LogoutModal';
+import { OrganizerRequestModal } from './modals/OrganizerRequestModal';
+import { TelegramModal } from './modals/TelegramModal';
+import { Button } from './ui/button';
 
 export function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,10 +23,22 @@ export function Navbar() {
       >
         <div className="flex items-center gap-4">
           <TelegramModal />
+          
+          <a
+            href="https://www.instagram.com/sxodim.sdu/" // replace with your actual link
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition"
+          >
+            <Button className='text-white bg-pink-500 hover:bg-pink-600 py-5 text-md px-7 h-10'>
+              <Instagram className="w-6 h-6 text-white" />
+            Instagram
+            </Button>
+          </a>
+          
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {/* "Are you Organizer?" Button */}
             <button
               onClick={openOrganizerModal}
               className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/80 transition"
@@ -36,7 +50,6 @@ export function Navbar() {
         </div>
       </motion.header>
 
-      {/* Modal for Organizer Request */}
       <OrganizerRequestModal open={isModalOpen} onOpenChange={closeOrganizerModal} />
     </div>
   )

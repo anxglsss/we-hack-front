@@ -146,4 +146,22 @@ export class EventService {
     );
     return response.data;
   }
+
+  /**
+   * Filter events by type or specific date (STUDENT, CLUB_MANAGER, ADMIN roles allowed)
+   */
+  static async filterEvents(
+    filterType?: 'today' | 'thisWeek' | 'nextWeek' | 'thisMonth',
+    specificDate?: string // ISO date string: 'YYYY-MM-DD'
+  ): Promise<EventResponseDto[]> {
+    const params: Record<string, string> = {};
+    if (filterType) params.filterType = filterType;
+    if (specificDate) params.specificDate = specificDate;
+
+    const response: AxiosResponse<EventResponseDto[]> = await axiosInstance.get(
+      `${this.BASE_URL}/filter`,
+      { params }
+    );
+    return response.data;
+  }
 }

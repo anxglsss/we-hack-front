@@ -55,6 +55,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       const user = decodeUser(tokens.accessToken)
       set({ user })
+      localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role }))
       console.log(user)
       toast.success(`Добро пожаловать, ${user.email}`)
     } catch (error: any) {
@@ -72,6 +73,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       const user = decodeUser(tokens.accessToken)
       set({ user })
+      localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role }))
       toast.success(`Добро пожаловать, ${user.email}`)
     } catch (error: any) {
       toast.error(error?.response?.data?.errorMessage || "Ошибка при входе")

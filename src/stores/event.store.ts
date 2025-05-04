@@ -19,6 +19,15 @@ interface EventState {
   getEventReviews: (eventId: number) => Promise<EventReviewDto[]>;
   addEventReview: (eventId: number, reviewData: EventReviewRequestDto) => Promise<void>;
   resetCurrentEvent: () => void;
+
+  notGetAllEvents: () => Promise<void>;
+  notCreateEvent: (data: EventRequestDto) => Promise<void>;
+  notUpdateEvent: (id: number, data: EventRequestDto) => Promise<void>;
+  notDeleteEvent: (id: number) => Promise<void>;
+  notGetEventTickets: (eventId: number) => Promise<TicketDto[]>;
+  notGetEventReviews: (eventId: number) => Promise<EventReviewDto[]>;
+  notAddEventReview: (eventId: number, reviewData: EventReviewRequestDto) => Promise<void>;
+
 }
 
 export const useEventStore = create<EventState>((set, get) => ({
@@ -175,5 +184,93 @@ export const useEventStore = create<EventState>((set, get) => ({
 
   resetCurrentEvent() {
     set({ currentEvent: null });
-  }
+  },
+
+  notGetAllEvents: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in fetching all events");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notCreateEvent: async (data) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in creating event");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notUpdateEvent: async (id, data) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in updating event");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notDeleteEvent: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in deleting event");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notGetEventTickets: async (eventId) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in fetching tickets");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+      return [];
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notGetEventReviews: async (eventId) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in fetching reviews");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+      return [];
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
+  notAddEventReview: async (eventId, reviewData) => {
+    set({ isLoading: true, error: null });
+    try {
+      throw new Error("Simulated failure in adding review");
+    } catch (error: any) {
+      set({ error: error.message });
+      toast.error(error.message);
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  
 }));
