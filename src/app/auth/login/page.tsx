@@ -26,8 +26,10 @@ export default function LoginPage() {
   const onSubmit = (data: LoginValues) => {
     try{
       authStore.login(data)
-    console.log("Login:", data)
-    router.replace("/dashboard")
+      console.log("Login:", data)
+      setTimeout(() => {
+        router.replace("/dashboard")
+      }, 1500)
     } catch(e: any) {
       console.log(e)
     }
