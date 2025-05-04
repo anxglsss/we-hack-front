@@ -252,7 +252,7 @@ export default function EventsPage() {
                         <span>{formatPrice(event.price)}</span>
                       </div>
                       <div className="text-sm text-zinc-400">
-                        {event.tickets?.length || 0}/{event.capacity} мест
+                        {event.capacity || 0}/{event.totalCapacity} мест
                       </div>
                     </div>
 

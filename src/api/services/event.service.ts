@@ -14,6 +14,7 @@ export interface EventRequestDto {
   streamingUrl?: string;
   price: number;
   capacity: number;
+  totalCapacity: number;
 }
 
 export interface TicketDto {
@@ -50,6 +51,7 @@ export interface EventResponseDto {
   streamingUrl?: string;
   price: number;
   capacity: number;
+  totalCapacity: number;
   createdAt: string;       // date-time format
   tickets: TicketDto[];
   reviews: EventReviewDto[];

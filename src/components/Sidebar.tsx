@@ -26,8 +26,10 @@ const roleBasedNavItems = {
   common: [
     { icon: <Calendar />, label: 'События', href: '/dashboard/events' },
     { icon: <Users />, label: 'Клубы', href: '/dashboard/clubs' },
-    { icon: <Users />, label: 'Все места', href: '/dashboard/places' },  // Added "All Places"
+    { icon: <Users />, label: 'Все места', href: '/dashboard/places' },
+    { icon: <Calendar />, label: 'Мои билеты', href: '/dashboard/tickets' }, // ✅ New item
   ]
+  
 }
 
 export function Sidebar() {
@@ -49,7 +51,7 @@ export function Sidebar() {
         )}
       >
         <div className="relative flex justify-center items-center px-4 pt-6 pb-6">
-          {collapsed ? <></> : <ExpandedLogo />}
+          {collapsed ? <></> : <ExpandedLogo/>}
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="absolute right-4 top-4 text-zinc-300"

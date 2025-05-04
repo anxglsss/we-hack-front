@@ -4,17 +4,17 @@ import { TicketResponseDto } from '@/types/ticket.types';
 
 export const TicketService = {
   async getUserTickets(): Promise<TicketResponseDto[]> {
-    const response = await axiosInstance.get('/api/tickets');
+    const response = await axiosInstance.get('/tickets');
     return response.data;
   },
 
   async getTicketById(id: number): Promise<TicketResponseDto> {
-    const response = await axiosInstance.get(`/api/tickets/${id}`);
+    const response = await axiosInstance.get(`/tickets/${id}`);
     return response.data;
   },
 
   async getTicketQrCode(id: number): Promise<string> {
-    const response = await axiosInstance.get(`/api/tickets/${id}/qr`, {
+    const response = await axiosInstance.get(`/tickets/${id}/qr`, {
       responseType: 'arraybuffer'
     });
     

@@ -45,6 +45,9 @@ const eventSchema = z.object({
   capacity: z.number().min(1, 'Capacity is required')
     .transform(Number)
     .refine(val => val > 0, 'Capacity must be greater than 0'),
+    totalCapacity: z.number().min(1, 'Capacity is required')
+    .transform(Number)
+    .refine(val => val > 0, 'Capacity must be greater than 0'),
   isOnline: z.boolean().default(false),
   streamingUrl: z.string().optional(),
 }).superRefine((data, ctx) => {
@@ -80,6 +83,7 @@ export const CreateEventModal = ({ open, onOpenChange }: CreateEventModalProps) 
       clubId: '',
       price: '',
       capacity: 100,
+      totalCapacity: 100,
       isOnline: false,
       streamingUrl: '',
     },
